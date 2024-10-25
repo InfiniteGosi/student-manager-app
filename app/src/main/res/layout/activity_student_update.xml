@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/gluten_semibold"
+            android:text="UPDATE STUDENT"
+            android:textSize="32sp"
+            android:gravity="center"
+            android:textColor="@color/black"/>
+
+        <!-- Thông tin cá nhân -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thông tin cá nhân"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/etFullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Họ và tên"
+            android:layout_marginBottom="6dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background" />
+
+        <EditText
+            android:id="@+id/etDateOfBirth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Ngày sinh (dd/MM/yyyy)"
+            android:layout_marginBottom="6dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background" />
+
+        <EditText
+            android:id="@+id/etNationality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Quốc tịch"
+            android:layout_marginBottom="6dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background" />
+
+        <EditText
+            android:id="@+id/etPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Số điện thoại"
+            android:inputType="phone"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background" />
+
+        <!-- Thông tin học tập -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thông tin học tập"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/etStudentID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Mã học sinh"
+            android:layout_marginBottom="6dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background" />
+
+        <EditText
+            android:id="@+id/etCurrentClass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Lớp"
+            android:layout_marginBottom="6dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background" />
+
+        <EditText
+            android:id="@+id/etGPA"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Điểm trung bình (GPA)"
+            android:inputType="numberDecimal"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background" />
+
+        <!-- Thông tin gia đình -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thông tin gia đình"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/etGuardianName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Tên cha mẹ/người giám hộ"
+            android:layout_marginBottom="6dp"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background" />
+
+        <EditText
+            android:id="@+id/etGuardianPhone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Số điện thoại người giám hộ"
+            android:inputType="phone"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background" />
+
+        <!-- Nút lưu -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnUpdateStudent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="update"
+            android:layout_marginTop="16dp"
+            android:padding="12dp"
+            android:textColor="@android:color/white"
+            android:background="@drawable/login_btn_background"
+            android:textStyle="bold"/>
+    </LinearLayout>
+</ScrollView>
