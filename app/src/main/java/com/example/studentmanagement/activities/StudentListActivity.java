@@ -65,7 +65,7 @@ public class StudentListActivity extends AppCompatActivity {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.item_student) {
-                Toast.makeText(StudentListActivity.this, "Students clicked", Toast.LENGTH_SHORT).show();
+                Toast.makeText(StudentListActivity.this, "Bạn đã ở danh sách", Toast.LENGTH_SHORT).show();
                 return true;
             } else if (id == R.id.item_search) {
                 Toast.makeText(StudentListActivity.this, "Search clicked", Toast.LENGTH_SHORT).show();

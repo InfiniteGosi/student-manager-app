@@ -16,7 +16,6 @@ import com.example.studentmanagement.R;
 import com.example.studentmanagement.activities.StudentListActivity;
 import com.example.studentmanagement.data.Student;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
