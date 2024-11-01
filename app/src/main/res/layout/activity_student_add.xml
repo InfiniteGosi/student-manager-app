@@ -21,14 +21,24 @@
             android:gravity="center"
             android:textColor="@color/black"/>
 
-        <!-- Thông tin cá nhân -->
+        <ImageView
+            android:id="@+id/imgStudentPhoto"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/baseline_person_24"
+            android:scaleType="centerCrop"
+            android:background="@drawable/imageview_border" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Thông tin cá nhân"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:paddingBottom="8dp"/>
+            android:paddingBottom="8dp"
+            android:paddingTop="16dp"/>
 
         <EditText
             android:id="@+id/etFullName"
@@ -64,9 +74,19 @@
             android:hint="Số điện thoại"
             android:inputType="phone"
             android:padding="12dp"
+            android:layout_marginBottom="6dp"
             android:background="@drawable/edittext_background" />
 
-        <!-- Thông tin học tập -->
+        <EditText
+            android:id="@+id/etEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="12dp"
+            android:background="@drawable/edittext_background"
+            android:layout_marginBottom="6dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -103,7 +123,6 @@
             android:padding="12dp"
             android:background="@drawable/edittext_background" />
 
-        <!-- Thông tin gia đình -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -131,7 +150,6 @@
             android:padding="12dp"
             android:background="@drawable/edittext_background" />
 
-        <!-- Nút lưu -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnSave"
             android:layout_width="match_parent"

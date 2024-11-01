@@ -5,11 +5,11 @@
     android:layout_height="match_parent">
 
     <!-- Nội dung chính của ứng dụng -->
-    <FrameLayout
-        android:id="@+id/content_frame"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/bottom_navigation" />
+        android:layout_above="@id/bottom_navigation"/>
 
     <!-- Task bar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView

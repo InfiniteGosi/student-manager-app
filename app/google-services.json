@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "739688871356",
+    "firebase_url": "https://android-midterm-61409-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "android-midterm-61409",
+    "storage_bucket": "android-midterm-61409.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739688871356:android:4a5f0e0da00a254b9967b9",
+        "android_client_info": {
+          "package_name": "com.example.studentmanagement"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnD0dlYS0LPVZephOW2o-6iotS7r4IIa0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
