@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StudentManagement"
         tools:targetApi="31">
-
+        <activity
+            android:name=".activities.LoginListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.UpdateUserActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
@@ -23,23 +29,23 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".activities.MainActivity"
-            android:exported="true">
-        </activity>
-
+            android:exported="true" />
         <activity
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:name=".activities.StudentListActivity"
-            android:exported="false">
-        </activity>
-
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:name=".activities.AddStudentActivity"
-            android:exported="false">
-        </activity>
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".activities.UploadProfileImageActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.AddUserActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
