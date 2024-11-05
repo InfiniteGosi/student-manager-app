@@ -39,29 +39,12 @@
             android:background="@drawable/edittext_background" />
 
         <EditText
-            android:id="@+id/etDateOfBirth"
+            android:id="@+id/etAge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Ngày sinh (dd/MM/yyyy)"
+            android:hint="Tuổi"
             android:layout_marginBottom="6dp"
-            android:padding="12dp"
-            android:background="@drawable/edittext_background" />
-
-        <EditText
-            android:id="@+id/etGender"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:hint="Giới tính"
-            android:padding="12dp"
-            android:background="@drawable/edittext_background" />
-
-        <EditText
-            android:id="@+id/etAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:hint="Địa chỉ"
+            android:inputType="number"
             android:padding="12dp"
             android:background="@drawable/edittext_background" />
 
@@ -85,96 +68,28 @@
             android:padding="12dp"
             android:background="@drawable/edittext_background" />
 
-        <EditText
-            android:id="@+id/etNationality"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Quốc tịch"
-            android:padding="12dp"
-            android:background="@drawable/edittext_background" />
-
-        <!-- Thông tin công việc -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thông tin công việc"
+            android:text="Quyền người dùng"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:paddingTop="16dp"
             android:paddingBottom="8dp"/>
 
-        <EditText
-            android:id="@+id/etEmployeeID"
+        <Spinner
+            android:id="@+id/spinner_role"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Mã nhân viên"
-            android:layout_marginBottom="6dp"
-            android:padding="12dp"
-            android:background="@drawable/edittext_background" />
+            android:background="@android:drawable/btn_dropdown"
+            android:spinnerMode="dropdown"/>
 
-        <EditText
-            android:id="@+id/etJobTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Chức danh"
-            android:layout_marginBottom="6dp"
-            android:padding="12dp"
-            android:background="@drawable/edittext_background" />
 
-        <EditText
-            android:id="@+id/etDepartment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Bộ phận"
-            android:layout_marginBottom="6dp"
-            android:padding="12dp"
-            android:background="@drawable/edittext_background" />
-
-        <EditText
-            android:id="@+id/etSalary"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Mức lương"
-            android:inputType="numberDecimal"
-            android:padding="12dp"
-            android:background="@drawable/edittext_background" />
-
-        <!-- Thông tin khẩn cấp -->
-        <TextView
+        <CheckBox
+            android:id="@+id/checkbox_status"
+            android:text="Bị vô hiệu hóa"
+            android:checked="false"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Thông tin khẩn cấp"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:paddingTop="16dp"
-            android:paddingBottom="8dp"/>
-
-        <EditText
-            android:id="@+id/etEmergencyContactName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Tên người liên hệ khẩn cấp"
-            android:layout_marginBottom="6dp"
-            android:padding="12dp"
-            android:background="@drawable/edittext_background" />
-
-        <EditText
-            android:id="@+id/etEmergencyContactPhone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Số điện thoại người liên hệ khẩn cấp"
-            android:inputType="phone"
-            android:layout_marginBottom="6dp"
-            android:padding="12dp"
-            android:background="@drawable/edittext_background" />
-
-        <EditText
-            android:id="@+id/etEmergencyContactRelation"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Quan hệ với người liên hệ khẩn cấp"
-            android:padding="12dp"
-            android:background="@drawable/edittext_background" />
+            android:layout_height="wrap_content" />
 
         <!-- Nút lưu -->
         <Button
