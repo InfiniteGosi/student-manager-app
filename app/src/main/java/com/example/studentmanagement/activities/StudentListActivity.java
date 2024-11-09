@@ -2,8 +2,13 @@ package com.example.studentmanagement.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuInflater;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.SearchView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
@@ -19,28 +24,59 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class StudentListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private StudentAdapter studentAdapter;
     private ArrayList<Student> studentList;
+    private ArrayList<Student> originalStudentList;
     private FirebaseFirestore db;
     private ActivityResultLauncher<Intent> addStudentLauncher;
+    private SearchView searchView;
+    private ImageView imgSort;
+    private boolean isAscending = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_student_list);
+
+        imgSort = findViewById(R.id.imgSort);
 
         db = FirebaseFirestore.getInstance();
         studentList = new ArrayList<>();
+        originalStudentList = new ArrayList<>();
         studentAdapter = new StudentAdapter(this, studentList);
 
         recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(studentAdapter);
 
+        searchView = findViewById(R.id.searchView);
+
         loadStudentsFromFirestore();
+
+        // Lọc danh sách khi người dùng nhập từ khóa vào SearchView
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (newText.isEmpty()) {
+                    // Nếu tìm kiếm rỗng, hiển thị lại danh sách gốc
+                    refreshStudentList();
+                } else {
+                    filterStudentList(newText); // Gọi phương thức lọc khi người dùng thay đổi từ khóa
+                }
+                return true;
+            }
+        });
 
         addStudentLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -82,6 +118,35 @@ public class StudentListActivity extends AppCompatActivity {
             } else {
                 return false;
             }
+        });
+
+        imgSort.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(StudentListActivity.this, imgSort);
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_sort, popupMenu.getMenu());
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == R.id.sort_by_name) {
+                    sortStudentListByName();
+                    return true;
+                } else if (item.getItemId() == R.id.sort_by_dob) {
+                    sortStudentListByDob();
+                    return true;
+                } else if (item.getItemId() == R.id.sort_by_student_id) {
+                    sortStudentListByStudentId();
+                    return true;
+                } else if (item.getItemId() == R.id.sort_by_class) {
+                    sortStudentListByClass();
+                    return true;
+                } else if (item.getItemId() == R.id.sort_by_gpa) {
+                    sortStudentListByGpa();
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+
+            popupMenu.show(); // Hiển thị menu
         });
     }
 
@@ -134,5 +199,68 @@ public class StudentListActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    private void filterStudentList(String query) {
+        ArrayList<Student> filteredList = new ArrayList<>();
+        for (Student student : studentList) {
+            if (student.getFullName().toLowerCase().contains(query.toLowerCase()) ||
+                    student.getStudentID().toLowerCase().contains(query.toLowerCase()) ||
+                    student.getEmail().toLowerCase().contains(query.toLowerCase())) {
+                filteredList.add(student);
+            }
+        }
+        studentAdapter.setStudentList(filteredList); // Cập nhật danh sách sinh viên trong adapter
+    }
+
+    // Các phương thức sắp xếp
+    private void sortStudentListByName() {
+        if (isAscending) {
+            Collections.sort(studentList, (s1, s2) -> s1.getFullName().compareTo(s2.getFullName()));
+        } else {
+            Collections.sort(studentList, (s1, s2) -> s2.getFullName().compareTo(s1.getFullName()));
+        }
+        studentAdapter.notifyDataSetChanged();
+        isAscending = !isAscending; // Đổi trạng thái sắp xếp
+    }
+
+    private void sortStudentListByDob() {
+        if (isAscending) {
+            Collections.sort(studentList, (s1, s2) -> s1.getDateOfBirth().compareTo(s2.getDateOfBirth()));
+        } else {
+            Collections.sort(studentList, (s1, s2) -> s2.getDateOfBirth().compareTo(s1.getDateOfBirth()));
+        }
+        studentAdapter.notifyDataSetChanged();
+        isAscending = !isAscending; // Đổi trạng thái sắp xếp
+    }
+
+    private void sortStudentListByStudentId() {
+        if (isAscending) {
+            Collections.sort(studentList, (s1, s2) -> s1.getStudentID().compareTo(s2.getStudentID()));
+        } else {
+            Collections.sort(studentList, (s1, s2) -> s2.getStudentID().compareTo(s1.getStudentID()));
+        }
+        studentAdapter.notifyDataSetChanged();
+        isAscending = !isAscending; // Đổi trạng thái sắp xếp
+    }
+
+    private void sortStudentListByClass() {
+        if (isAscending) {
+            Collections.sort(studentList, (s1, s2) -> s1.getCurrentClass().compareTo(s2.getCurrentClass()));
+        } else {
+            Collections.sort(studentList, (s1, s2) -> s2.getCurrentClass().compareTo(s1.getCurrentClass()));
+        }
+        studentAdapter.notifyDataSetChanged();
+        isAscending = !isAscending; // Đổi trạng thái sắp xếp
+    }
+
+    private void sortStudentListByGpa() {
+        if (isAscending) {
+            Collections.sort(studentList, (s1, s2) -> Double.compare(s1.getGpa(), s2.getGpa()));
+        } else {
+            Collections.sort(studentList, (s1, s2) -> Double.compare(s2.getGpa(), s1.getGpa())); // Sắp xếp từ cao đến thấp
+        }
+        studentAdapter.notifyDataSetChanged();
+        isAscending = !isAscending; // Đổi trạng thái sắp xếp
     }
 }
