@@ -44,4 +44,12 @@
     </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string-array name="sort_options">
+        <item>Sắp xếp theo tên</item>
+        <item>Sắp xếp theo ngày sinh</item>
+        <item>Sắp xếp theo mã sinh viên</item>
+        <item>Sắp xếp theo lớp hiện tại</item>
+        <item>Sắp xếp theo điểm trung bình</item>
+    </string-array>
 </resources>

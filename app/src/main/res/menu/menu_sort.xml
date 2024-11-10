@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/sort_by_name"
+        android:title="Sắp xếp theo tên" />
+    <item
+        android:id="@+id/sort_by_dob"
+        android:title="Sắp xếp theo ngày sinh" />
+    <item
+        android:id="@+id/sort_by_student_id"
+        android:title="Sắp xếp theo mã sinh viên" />
+    <item
+        android:id="@+id/sort_by_class"
+        android:title="Sắp xếp theo lớp hiện tại" />
+    <item
+        android:id="@+id/sort_by_gpa"
+        android:title="Sắp xếp theo điểm trung bình" />
+</menu>

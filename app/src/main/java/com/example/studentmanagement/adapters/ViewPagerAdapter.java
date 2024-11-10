@@ -31,9 +31,8 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
             case 4:
                 return new ProfileFragment();
             default:
-
+                return new ProfileFragment();
         }
-        return null;
     }
 
     @Override

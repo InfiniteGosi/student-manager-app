@@ -15,6 +15,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.studentmanagement.R;
+import com.example.studentmanagement.models.LoginEntry;
+import com.example.studentmanagement.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -22,6 +24,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class LoginActivity extends AppCompatActivity {
     EditText emailText, passwordText;
@@ -77,39 +85,66 @@ public class LoginActivity extends AppCompatActivity {
 
     private void signIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            FirebaseUser user = mAuth.getCurrentUser();
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            String userId = user.getUid();
+                            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users").child(userId);
 
-                            Toast.makeText(LoginActivity.this, "Đăng nhập thành công.",
-                                    Toast.LENGTH_SHORT).show();
+                            // Check if user record exists in Realtime Database
+                            userRef.get().addOnCompleteListener(userTask -> {
+                                if (userTask.isSuccessful() && userTask.getResult().exists()) {
+                                    User userData = userTask.getResult().getValue(User.class);
+                                    if (userData != null && Boolean.TRUE.equals(userData.getLocked())) {
+                                        Toast.makeText(LoginActivity.this, "Account is locked.", Toast.LENGTH_SHORT).show();
+                                        mAuth.signOut();  // Sign out immediately
+                                    } else {
+                                        // Log the login event
+                                        logLoginEvent(userId);
 
-                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                            startActivity(intent);
-                            finish();
+                                        Toast.makeText(LoginActivity.this, "Login successful.", Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                                        finish();
+                                    }
+                                } else {
+                                    Toast.makeText(LoginActivity.this, "Account has been deleted.", Toast.LENGTH_SHORT).show();
+                                    mAuth.signOut();
+                                }
+                            });
                         }
-                        else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
-                            // Người dùng không tồn tại
-                            Toast.makeText(LoginActivity.this,
-                                    "Người dùng không tồn tại.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                            // Sai mật khẩu
-                            Toast.makeText(LoginActivity.this,
-                                    "Sai mật khẩu, vui lòng thử lại.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            // Xử lý các lỗi khác
-                            Toast.makeText(LoginActivity.this,
-                                    "Đăng nhập thất bại, vui lòng thử lại sau.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                    } else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
+                        Toast.makeText(LoginActivity.this, "User does not exist.", Toast.LENGTH_SHORT).show();
+                    } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+                        Toast.makeText(LoginActivity.this, "Incorrect password, please try again.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Login failed, please try again later.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
+
+    private void logLoginEvent(String userId) {
+        DatabaseReference loginHistoryRef = FirebaseDatabase.getInstance()
+                .getReference("users")
+                .child(userId)
+                .child("loginHistory");
+
+        // Create a LoginEntry object with the current timestamp
+        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+        LoginEntry loginEntry = new LoginEntry(timestamp);
+
+        // Add a new LoginEntry under the loginHistory node
+        loginHistoryRef.push().setValue(loginEntry)
+                .addOnSuccessListener(aVoid -> {
+                    // Successfully logged the login event
+                })
+                .addOnFailureListener(e -> {
+                    // Handle any error if necessary
+                    Toast.makeText(LoginActivity.this, "Failed to log login event.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+
+
+
 }
