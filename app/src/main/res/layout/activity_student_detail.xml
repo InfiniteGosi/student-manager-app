@@ -41,18 +41,44 @@
             android:padding="15dp"
             android:layout_margin="15dp"
             android:background="@color/white">
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/ic_id_student"
+                android:background="@drawable/ic_profile"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_show_id_student"
+                android:layout_alignStart="@+id/ic_profile"
+                android:hint="ID Student"
+                android:layout_marginStart="50dp"
+                android:textSize="18sp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/textView_show_id_student"
+                android:background="@android:color/darker_gray"
+                android:id="@+id/divider_id"/>
+
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:id="@+id/ic_profile"
-                android:background="@drawable/ic_profile"/>
+                android:layout_below="@+id/divider_id"
+                android:background="@drawable/ic_profile"
+                android:layout_marginTop="20dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_full_name"
                 android:layout_alignStart="@+id/ic_profile"
-                android:hint="Loading"
+                android:hint="Full name"
                 android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/divider_id"
                 android:textSize="18sp"/>
             <View
                 android:layout_width="match_parent"
@@ -65,19 +91,44 @@
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
+                android:id="@+id/ic_national"
+                android:layout_below="@+id/divider_name"
+                android:background="@drawable/ic_national"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_show_national"
+                android:layout_alignStart="@+id/ic_national"
+                android:hint="National"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/divider_name"
+                android:textSize="18sp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/textView_show_national"
+                android:background="@android:color/darker_gray"
+                android:id="@+id/divider_national"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:id="@+id/ic_email"
                 android:background="@drawable/ic_email"
-                android:layout_below="@id/divider_name"
+                android:layout_below="@id/divider_national"
                 android:layout_marginTop="20dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_email"
                 android:layout_alignStart="@+id/ic_email"
-                android:hint="Loading"
+                android:hint="Email"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
-                android:layout_below="@id/divider_name"
+                android:layout_below="@id/divider_national"
                 android:textSize="18sp"/>
             <View
                 android:layout_width="match_parent"
@@ -99,7 +150,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_dob"
                 android:layout_alignStart="@+id/ic_birthday"
-                android:hint="Loading"
+                android:hint="Birth day"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_below="@id/divider_email"
@@ -112,20 +163,19 @@
                 android:background="@android:color/darker_gray"
                 android:id="@+id/divider_dob"/>
 
-
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:id="@+id/ic_gender"
-                android:background="@drawable/ic_gender"
+                android:id="@+id/ic_current_class"
+                android:background="@drawable/ic_class"
                 android:layout_below="@id/divider_dob"
                 android:layout_marginTop="20dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView_show_gender"
-                android:layout_alignStart="@+id/ic_gender"
-                android:hint="Loading"
+                android:id="@+id/textView_show_current_class"
+                android:layout_alignStart="@+id/ic_current_class"
+                android:hint="Class"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_below="@id/divider_dob"
@@ -134,26 +184,101 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginTop="20dp"
-                android:layout_below="@+id/textView_show_gender"
+                android:layout_below="@+id/textView_show_current_class"
                 android:background="@android:color/darker_gray"
-                android:id="@+id/divider_gender"/>
+                android:id="@+id/divider_current_class"/>
 
             <ImageView
                 android:layout_width="25dp"
                 android:layout_height="25dp"
-                android:id="@+id/ic_mobile"
-                android:background="@drawable/ic_mobile"
-                android:layout_below="@id/divider_gender"
+                android:id="@+id/ic_gpa"
+                android:background="@drawable/ic_gpa"
+                android:layout_below="@id/divider_current_class"
                 android:layout_marginTop="20dp"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/textView_show_mobile"
-                android:layout_alignStart="@+id/ic_mobile"
-                android:hint="Loading"
+                android:id="@+id/textView_show_gpa"
+                android:layout_alignStart="@+id/ic_gpa"
+                android:hint="GPA"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
-                android:layout_below="@id/divider_gender"
+                android:layout_below="@id/divider_current_class"
+                android:textSize="18sp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/textView_show_gpa"
+                android:background="@android:color/darker_gray"
+                android:id="@+id/divider_gpa"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/ic_student_phone"
+                android:background="@drawable/ic_mobile"
+                android:layout_below="@id/divider_gpa"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_show_student_phone"
+                android:layout_alignStart="@+id/ic_student_phone"
+                android:hint="Student's phone"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/divider_gpa"
+                android:textSize="18sp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/textView_show_student_phone"
+                android:background="@android:color/darker_gray"
+                android:id="@+id/divider_student_phone"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/ic_parent_name"
+                android:background="@drawable/ic_parent"
+                android:layout_below="@id/divider_student_phone"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_show_parent_name"
+                android:layout_alignStart="@+id/ic_parent_name"
+                android:hint="Parent's name"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/divider_student_phone"
+                android:textSize="18sp"/>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/textView_show_parent_name"
+                android:background="@android:color/darker_gray"
+                android:id="@+id/divider_parent_name"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:id="@+id/ic_parent_phone"
+                android:background="@drawable/ic_mobile"
+                android:layout_below="@id/divider_parent_name"
+                android:layout_marginTop="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView_show_parent_phone"
+                android:layout_alignStart="@+id/ic_parent_phone"
+                android:hint="Parent's Phone"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/divider_parent_name"
                 android:textSize="18sp"/>
             <ProgressBar
                 android:layout_width="wrap_content"

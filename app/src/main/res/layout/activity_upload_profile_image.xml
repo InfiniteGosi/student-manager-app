@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="14dp"
-    tools:context=".UploadProfileImageActivity">
+    tools:context=".activities.UploadProfileImageActivity">
 
 
     <LinearLayout

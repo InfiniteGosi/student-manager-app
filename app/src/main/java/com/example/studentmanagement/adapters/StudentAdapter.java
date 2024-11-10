@@ -1,10 +1,12 @@
 package com.example.studentmanagement.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.studentmanagement.R;
+import com.example.studentmanagement.activities.StudentDetail;
 import com.example.studentmanagement.activities.StudentListActivity;
 import com.example.studentmanagement.data.Student;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -56,6 +59,15 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         // Thêm sự kiện nhấp vào hình ảnh sửa nếu cần
         holder.imgPen.setOnClickListener(v -> {
             // Xử lý sửa sinh viên nếu cần
+        });
+
+        holder.linearLayout.setOnClickListener(v -> {
+            Context conText = context.get();
+            if(conText != null){
+                Intent intent = new Intent(conText, StudentDetail.class);
+                intent.putExtra("STUDENT_ID", student.getStudentID());
+                conText.startActivity(intent);
+            }
         });
     }
 
@@ -107,6 +119,8 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         TextView tvStudentID, tvFullName, tvClass, tvEmail;
         ImageView imgDelete, imgPen;
 
+        LinearLayout linearLayout;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvStudentID = itemView.findViewById(R.id.tvStudentID);
@@ -115,6 +129,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
             tvEmail = itemView.findViewById(R.id.tvEmail);
             imgDelete = itemView.findViewById(R.id.imgDelete);
             imgPen = itemView.findViewById(R.id.imgPen);
+            linearLayout = itemView.findViewById(R.id.linearLayout);
         }
     }
 }
