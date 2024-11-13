@@ -36,6 +36,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/relativeLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="15dp"
@@ -280,6 +281,24 @@
                 android:layout_marginTop="20dp"
                 android:layout_below="@id/divider_parent_name"
                 android:textSize="18sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/textView_show_parent_phone"
+                android:background="@android:color/darker_gray"
+                android:id="@+id/divider_parent_phone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/divider_parent_phone"
+                android:layout_marginTop="20dp"
+                android:id="@+id/saveInfoStudent"
+                android:text="Save"
+                />
+
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

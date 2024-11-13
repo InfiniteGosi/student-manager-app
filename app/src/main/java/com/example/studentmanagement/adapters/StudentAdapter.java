@@ -59,13 +59,22 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         // Thêm sự kiện nhấp vào hình ảnh sửa nếu cần
         holder.imgPen.setOnClickListener(v -> {
             // Xử lý sửa sinh viên nếu cần
+            Context conText = context.get();
+            if(conText != null){
+                Intent intent = new Intent(conText, StudentDetail.class);
+                intent.putExtra("STUDENT_ID", student.getStudentID());
+                intent.putExtra("isEditMode", true);
+                conText.startActivity(intent);
+            }
         });
 
+        // Sự kiện click xem thông tin sinh viên
         holder.linearLayout.setOnClickListener(v -> {
             Context conText = context.get();
             if(conText != null){
                 Intent intent = new Intent(conText, StudentDetail.class);
                 intent.putExtra("STUDENT_ID", student.getStudentID());
+                intent.putExtra("isEditMode", false);
                 conText.startActivity(intent);
             }
         });
@@ -75,7 +84,6 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
     public int getItemCount() {
         return studentList.size(); // Trả về số lượng sinh viên trong danh sách
     }
-
 
     // Phương thức để xóa sinh viên
     private void deleteStudent(String studentID, int position) {

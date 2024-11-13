@@ -150,6 +150,12 @@ public class StudentListActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        refreshStudentList();
+    }
+
     public void refreshStudentList() {
         loadStudentsFromFirestore(); // Gọi lại phương thức để tải lại danh sách
     }
