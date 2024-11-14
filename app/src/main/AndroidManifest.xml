@@ -15,6 +15,11 @@
         android:theme="@style/Theme.StudentManagement"
         tools:targetApi="31">
         <activity
+            android:name=".activities.StudentDetail"
+            android:exported="false"
+            android:label="@string/title_activity_student_detail"
+            android:theme="@style/Theme.StudentManagement" />
+        <activity
             android:name=".activities.LoginListActivity"
             android:exported="false" />
         <activity

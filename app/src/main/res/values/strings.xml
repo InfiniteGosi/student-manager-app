@@ -52,4 +52,5 @@
         <item>Sắp xếp theo lớp hiện tại</item>
         <item>Sắp xếp theo điểm trung bình</item>
     </string-array>
+    <string name="title_activity_student_detail">StudentDetail</string>
 </resources>
