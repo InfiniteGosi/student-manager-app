@@ -21,8 +21,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="upload_avatar"
-            android:textColor="@color/light_red"
+            android:text="Tải ảnh đại diện"
             android:textSize="30dp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -70,7 +69,7 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/round"
-                android:text="Go back"
+                android:text="Quay lại"
                 android:textColor="@color/white" />
 
             <View

@@ -99,11 +99,11 @@ public class UpdateUserActivity extends AppCompatActivity {
                         // Update the user node with new values
                         userSnapshot.getRef().setValue(updatedUser)
                                 .addOnSuccessListener(aVoid -> {
-                                    Toast.makeText(UpdateUserActivity.this, "User information saved", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(UpdateUserActivity.this, "Dữ liệu người dùng đã được lưu", Toast.LENGTH_SHORT).show();
                                     setResult(RESULT_OK);  // Set result to OK to notify that update was successful
                                     finish();  // Close the activity
                                 })
-                                .addOnFailureListener(e -> Toast.makeText(UpdateUserActivity.this, "Failed to save user", Toast.LENGTH_SHORT).show());
+                                .addOnFailureListener(e -> Toast.makeText(UpdateUserActivity.this, "Lưu dữ liệu thất bại", Toast.LENGTH_SHORT).show());
                     }
                 }
 

@@ -97,28 +97,28 @@ public class LoginActivity extends AppCompatActivity {
                                 if (userTask.isSuccessful() && userTask.getResult().exists()) {
                                     User userData = userTask.getResult().getValue(User.class);
                                     if (userData != null && Boolean.TRUE.equals(userData.getLocked())) {
-                                        Toast.makeText(LoginActivity.this, "Account is locked.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, "Tài khoản này đã bị khóa", Toast.LENGTH_SHORT).show();
                                         mAuth.signOut();  // Sign out immediately
                                     } else {
                                         // Log the login event
                                         logLoginEvent(userId);
 
-                                        Toast.makeText(LoginActivity.this, "Login successful.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
                                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                                         finish();
                                     }
                                 } else {
-                                    Toast.makeText(LoginActivity.this, "Account has been deleted.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(LoginActivity.this, "Tài khoản này đã bị xóa", Toast.LENGTH_SHORT).show();
                                     mAuth.signOut();
                                 }
                             });
                         }
                     } else if (task.getException() instanceof FirebaseAuthInvalidUserException) {
-                        Toast.makeText(LoginActivity.this, "User does not exist.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Tài khoảng không tồn tại", Toast.LENGTH_SHORT).show();
                     } else if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                        Toast.makeText(LoginActivity.this, "Incorrect password, please try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Mật khẩu đăng nhập không đúng", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(LoginActivity.this, "Login failed, please try again later.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Đăng nhập thất bại, vui lòng thử lại sau", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -130,7 +130,7 @@ public class LoginActivity extends AppCompatActivity {
                 .child("loginHistory");
 
         // Create a LoginEntry object with the current timestamp
-        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+        String timestamp = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", Locale.getDefault()).format(new Date());
         LoginEntry loginEntry = new LoginEntry(timestamp);
 
         // Add a new LoginEntry under the loginHistory node

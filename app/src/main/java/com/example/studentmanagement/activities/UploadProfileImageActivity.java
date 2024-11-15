@@ -105,7 +105,7 @@ public class UploadProfileImageActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            Toast.makeText(UploadProfileImageActivity.this, "Upload Successful", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(UploadProfileImageActivity.this, "Tải lên thành công", Toast.LENGTH_SHORT).show();
 
                             // Retrieve the download URL
                             ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
@@ -137,7 +137,7 @@ public class UploadProfileImageActivity extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> {
                         progressDialog.dismiss();
-                        Toast.makeText(UploadProfileImageActivity.this, "Upload Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UploadProfileImageActivity.this, "Tải lên thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     })
                     .addOnProgressListener(taskSnapshot -> {
                         double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
