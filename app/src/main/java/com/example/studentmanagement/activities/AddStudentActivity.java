@@ -44,7 +44,7 @@ public class AddStudentActivity extends AppCompatActivity {
                         readFileAndUpload(uri, ",");
                     }
                 } else {
-                    Toast.makeText(this, "Failed to load file", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Tải file thất bại", Toast.LENGTH_SHORT).show();
                 }
             }
     );
@@ -153,22 +153,22 @@ public class AddStudentActivity extends AppCompatActivity {
         if (fullName.isEmpty() || dateOfBirth.isEmpty() || nationality.isEmpty() ||
                 phoneNumber.isEmpty() || studentID.isEmpty() || currentClass.isEmpty() ||
                 guardianName.isEmpty() || guardianPhone.isEmpty()) {
-            Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Vui lòng điền hết tất cả thông tin", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!isValidEmail(email)) {
-            Toast.makeText(this, "Invalid email format.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Định dạng email không đúng", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!isValidPhoneNumber(phoneNumber)) {
-            Toast.makeText(this, "Invalid phone number.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Định dạng số điện thoại không đúng", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!isValidDate(dateOfBirth)) {
-            Toast.makeText(this, "Invalid date format (dd/MM/yyyy).", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Định dạng ngày không đúng (dd/MM/yyyy).", Toast.LENGTH_SHORT).show();
             return;
         }
 

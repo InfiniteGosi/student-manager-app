@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.studentmanagement.R;
+import com.example.studentmanagement.activities.ChangePasswordActivity;
 import com.example.studentmanagement.activities.LoginActivity;
 import com.example.studentmanagement.activities.MainActivity;
 import com.example.studentmanagement.activities.UploadProfileImageActivity;
@@ -37,7 +38,7 @@ import java.util.Objects;
 public class ProfileFragment extends Fragment {
 
     private DatabaseReference userRef;
-    private Button logoutButton;
+    private Button logoutButton, changepwButton;
     private TextView usernameText;
     private ImageView changeIcon, avatarImage;
     private ActivityResultLauncher<Intent> uploadImageLauncher;
@@ -70,6 +71,7 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         logoutButton = view.findViewById(R.id.logout_button);
+        changepwButton = view.findViewById(R.id.changepw_button);
         usernameText = view.findViewById(R.id.text_username);
         changeIcon = view.findViewById(R.id.change_icon);
         avatarImage = view.findViewById(R.id.avatar_image);
@@ -85,6 +87,11 @@ public class ProfileFragment extends Fragment {
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
             getActivity().finish();
+        });
+
+        changepwButton.setOnClickListener(view1 -> {
+            Intent i = new Intent(getContext(), ChangePasswordActivity.class);
+            startActivity(i);
         });
 
         changeIcon.setOnClickListener(view12 -> {

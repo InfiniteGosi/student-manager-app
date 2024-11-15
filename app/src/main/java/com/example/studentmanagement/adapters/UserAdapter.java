@@ -87,16 +87,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                                                 userSnapshot.getRef().removeValue()
                                                         .addOnSuccessListener(aVoid ->
                                                                 Toast.makeText(holder.itemView.getContext(),
-                                                                        "User deleted successfully", Toast.LENGTH_SHORT).show())
+                                                                        "Xóa người dùng thành công", Toast.LENGTH_SHORT).show())
                                                         .addOnFailureListener(e ->
                                                                 Toast.makeText(holder.itemView.getContext(),
-                                                                        "Failed to delete user", Toast.LENGTH_SHORT).show());
+                                                                        "Xóa người dùng thất bại", Toast.LENGTH_SHORT).show());
                                             }
                                         }
 
                                         @Override
                                         public void onCancelled(@NonNull DatabaseError databaseError) {
-                                            Toast.makeText(holder.itemView.getContext(), "Error deleting user",
+                                            Toast.makeText(holder.itemView.getContext(), "Có lỗi khi xóa người dùng",
                                                     Toast.LENGTH_SHORT).show();
                                         }
                                     });

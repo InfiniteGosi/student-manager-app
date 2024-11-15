@@ -212,7 +212,7 @@ public class StudentListFragment extends Fragment {
     private void downloadStudentList() {
         // Kiểm tra nếu danh sách rỗng
         if (studentList.isEmpty()) {
-            Toast.makeText(getContext(), "No students to download", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Không có học sinh để tải về", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -244,9 +244,9 @@ public class StudentListFragment extends Fragment {
                         .append(student.getGuardianPhone()).append("\n");
             }
 
-            Toast.makeText(getContext(), "File saved to Downloads: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "File đã được lưu vào: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Error writing file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Có lỗi khi ghi file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
