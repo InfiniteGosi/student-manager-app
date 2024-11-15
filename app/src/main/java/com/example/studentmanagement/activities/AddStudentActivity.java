@@ -18,16 +18,14 @@ import com.example.studentmanagement.data.Student;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
-import com.example.studentmanagement.fragments.StudentListFragment;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AddStudentActivity extends AppCompatActivity {
 
@@ -185,22 +183,26 @@ public class AddStudentActivity extends AppCompatActivity {
             return;
         }
 
-        // Tạo đối tượng sinh viên mới
-        Student newStudent = new Student(fullName, dateOfBirth, nationality, phoneNumber,
-                email, studentID, currentClass, gpa, guardianName, guardianPhone);
+        // Lưu thông tin sinh viên vào Realtime Database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference studentRef = database.getReference("students");
 
-        // Truyền đối tượng sinh viên mới về StudentListActivity
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("newStudent", newStudent);
-        setResult(RESULT_OK, resultIntent);
+        String studentKey = studentRef.push().getKey();
+        if (studentKey != null) {
+            Student newStudent = new Student(fullName, dateOfBirth, nationality, phoneNumber,
+                    email, studentID, currentClass, gpa, guardianName, guardianPhone);
 
-        Toast.makeText(this, "Thêm sinh viên thành công", Toast.LENGTH_SHORT).show();
+            studentRef.child(studentKey).setValue(newStudent)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Thêm sinh viên thành công", Toast.LENGTH_SHORT).show();
 
-        // Kết thúc AddStudentActivity và quay về
-        new Handler().postDelayed(() -> {
-            finish(); // Kết thúc Activity sau thời gian chờ
-        }, 2000);
+                        // Kết thúc AddStudentActivity và quay về
+                        new Handler().postDelayed(this::finish, 2000);
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "Lỗi khi thêm sinh viên", Toast.LENGTH_SHORT).show());
+        }
     }
+
     // Phương thức kiểm tra định dạng email
     private boolean isValidEmail(String email) {
         String emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";

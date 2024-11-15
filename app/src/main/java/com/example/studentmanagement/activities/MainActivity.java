@@ -7,9 +7,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.studentmanagement.R;
@@ -21,9 +19,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.List;
 
@@ -31,18 +26,18 @@ public class MainActivity extends FragmentActivity {
     private ViewPager2 viewPager;
     private BottomNavigationView bottomNavigationView;
     private ActivityResultLauncher<Intent> addStudentLauncher;
-    private boolean isFirstTime = true;
-    private FirebaseFirestore db;
-    private DatabaseReference userRef;
+    private DatabaseReference studentRef;  // Thay đổi từ Firestore sang Realtime Database
     private String userRole;
-    private ListenerRegistration roleListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        db = FirebaseFirestore.getInstance();
+        // Khởi tạo đối tượng Firebase Realtime Database
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        studentRef = database.getReference("students");  // Thay đổi từ Firestore collection sang Realtime Database reference
+
         viewPager = findViewById(R.id.viewPager);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -57,9 +52,9 @@ public class MainActivity extends FragmentActivity {
                             if (data.hasExtra("studentsList")) {
                                 List<Student> studentsList = (List<Student>) data.getSerializableExtra("studentsList");
                                 if (studentsList != null && !studentsList.isEmpty()) {
-                                    // Gửi danh sách sinh viên đến Firestore
+                                    // Gửi danh sách sinh viên đến Realtime Database
                                     for (Student student : studentsList) {
-                                        db.collection("students").document(student.getStudentID()).set(student)
+                                        studentRef.child(student.getStudentID()).setValue(student)  // Sử dụng Realtime Database để lưu
                                                 .addOnSuccessListener(aVoid -> {
                                                     Toast.makeText(MainActivity.this, "Sinh viên đã được thêm vào hệ thống.", Toast.LENGTH_SHORT).show();
                                                 })
@@ -72,15 +67,15 @@ public class MainActivity extends FragmentActivity {
                                     StudentListFragment fragment = (StudentListFragment) getSupportFragmentManager()
                                             .findFragmentByTag("f" + 1); // "f" + vị trí của Fragment trong ViewPager
                                     if (fragment != null) {
-                                        fragment.loadStudentsFromFirestore(); // Làm mới danh sách
+                                        fragment.loadStudentsFromDatabase(); // Làm mới danh sách từ Realtime Database
                                     }
                                 }
                             } else if (data.hasExtra("newStudent")) {
                                 // Chỉ thêm một sinh viên nếu chỉ có một sinh viên mới
                                 Student newStudent = (Student) data.getSerializableExtra("newStudent");
                                 if (newStudent != null) {
-                                    // Lưu sinh viên mới vào Firestore
-                                    db.collection("students").document(newStudent.getStudentID()).set(newStudent);
+                                    // Lưu sinh viên mới vào Realtime Database
+                                    studentRef.child(newStudent.getStudentID()).setValue(newStudent);
 
                                     // Cập nhật danh sách sinh viên trong StudentListFragment
                                     Toast.makeText(this, "Danh sách đã cập nhật", Toast.LENGTH_SHORT).show();
@@ -89,7 +84,7 @@ public class MainActivity extends FragmentActivity {
                                     StudentListFragment fragment = (StudentListFragment) getSupportFragmentManager()
                                             .findFragmentByTag("f" + 1); // "f" + vị trí của Fragment trong ViewPager
                                     if (fragment != null) {
-                                        fragment.loadStudentsFromFirestore(); // Làm mới danh sách
+                                        fragment.loadStudentsFromDatabase(); // Làm mới danh sách từ Realtime Database
                                     }
                                 }
                             }
@@ -105,7 +100,7 @@ public class MainActivity extends FragmentActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         if (user != null) {
-            userRef = FirebaseDatabase.getInstance().getReference("users")
+            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users")
                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
             userRef.get().addOnSuccessListener(dataSnapshot -> {
                 if (dataSnapshot.exists()) {
@@ -173,6 +168,8 @@ public class MainActivity extends FragmentActivity {
     private void showAddDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Bạn muốn thêm");
+        DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("users")
+                .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
         userRef.get().addOnSuccessListener(dataSnapshot -> {
             if (dataSnapshot.exists()) {
                 String role = dataSnapshot.child("role").getValue(String.class);
@@ -206,6 +203,7 @@ public class MainActivity extends FragmentActivity {
         });
 
     }
+
     private void setupBottomNavigation(String role) {
         bottomNavigationView.setOnItemSelectedListener(item -> {
             if ("Employee".equals(role)){
