@@ -134,16 +134,37 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                if (position == 0) {
-                    bottomNavigationView.setSelectedItemId(R.id.item_home);
-                } else if (position == 1) {
-                    bottomNavigationView.setSelectedItemId(R.id.item_student);
-                } else if (position == 2) {
+                if ("Employee".equals(userRole)) {
+                    if (position == 0) {
+                        bottomNavigationView.setSelectedItemId(R.id.item_home);
+                    } else if (position == 1) {
+                        bottomNavigationView.setSelectedItemId(R.id.item_student);
+                    } else if (position == 2) {
+                        bottomNavigationView.setSelectedItemId(R.id.item_profile);
+                    }
+                } else if ("Manager".equals(userRole)) {
+                    if (position == 0) {
+                        bottomNavigationView.setSelectedItemId(R.id.item_home);
+                    } else if (position == 1) {
+                        bottomNavigationView.setSelectedItemId(R.id.item_student);
+                    } else if (position == 2) {
 
-                } else if (position == 3) {
-                    bottomNavigationView.setSelectedItemId(R.id.item_staff);
-                } else if (position == 4) {
-                    bottomNavigationView.setSelectedItemId(R.id.item_profile);
+                    } else if (position == 3) {
+                        bottomNavigationView.setSelectedItemId(R.id.item_profile);
+                    }
+
+                } else {
+                    if (position == 0) {
+                        bottomNavigationView.setSelectedItemId(R.id.item_home);
+                    } else if (position == 1) {
+                        bottomNavigationView.setSelectedItemId(R.id.item_student);
+                    } else if (position == 2) {
+
+                    } else if (position == 3) {
+                        bottomNavigationView.setSelectedItemId(R.id.item_profile);
+                    } else if (position == 4) {
+                        bottomNavigationView.setSelectedItemId(R.id.item_profile);
+                    }
                 }
             }
         });
