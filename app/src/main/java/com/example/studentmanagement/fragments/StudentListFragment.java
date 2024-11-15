@@ -1,6 +1,8 @@
 package com.example.studentmanagement.fragments;
 
+import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -36,7 +41,9 @@ public class StudentListFragment extends Fragment {
     private DatabaseReference studentRef;
     private SearchView searchView;
     private ImageView imgSort;
+    private ImageView imgDown;
     private boolean isAscending = true;
+
 
     @Nullable
     @Override
@@ -46,6 +53,8 @@ public class StudentListFragment extends Fragment {
         imgSort = view.findViewById(R.id.imgSort);
         searchView = view.findViewById(R.id.searchView);
         recyclerView = view.findViewById(R.id.std_list_recyclerview);
+        imgDown = view.findViewById(R.id.imgDown);
+
 
         // Khởi tạo Realtime Database
         database = FirebaseDatabase.getInstance();
@@ -57,6 +66,8 @@ public class StudentListFragment extends Fragment {
         recyclerView.setAdapter(studentAdapter);
 
         loadStudentsFromDatabase();
+
+        imgDown.setOnClickListener(v -> downloadStudentList());
 
         setupSearchView();
         setupSortMenu();
@@ -197,4 +208,46 @@ public class StudentListFragment extends Fragment {
         studentAdapter.notifyDataSetChanged();
         isAscending = !isAscending; // Đổi trạng thái sắp xếp
     }
+
+    private void downloadStudentList() {
+        // Kiểm tra nếu danh sách rỗng
+        if (studentList.isEmpty()) {
+            Toast.makeText(getContext(), "No students to download", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Ghi danh sách vào file CSV
+        writeStudentsToCsv();
+    }
+
+    private void writeStudentsToCsv() {
+        // Đường dẫn lưu file vào thư mục Downloads
+        String fileName = "student_list.csv";
+        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(downloadDir, fileName);
+
+        try (FileWriter writer = new FileWriter(file)) {
+            // Ghi dòng tiêu đề
+            writer.append("Student ID,Full Name,Date of Birth,Nationality,Phone Number,Email,Class,GPA,Guardian Name,Guardian Phone\n");
+
+            // Ghi dữ liệu sinh viên
+            for (Student student : studentList) {
+                writer.append(student.getStudentID()).append(",")
+                        .append(student.getFullName()).append(",")
+                        .append(student.getDateOfBirth()).append(",")
+                        .append(student.getNationality()).append(",")
+                        .append(student.getPhoneNumber()).append(",")
+                        .append(student.getEmail()).append(",")
+                        .append(student.getCurrentClass()).append(",")
+                        .append(String.valueOf(student.getGpa())).append(",")
+                        .append(student.getGuardianName()).append(",")
+                        .append(student.getGuardianPhone()).append("\n");
+            }
+
+            Toast.makeText(getContext(), "File saved to Downloads: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Error writing file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
