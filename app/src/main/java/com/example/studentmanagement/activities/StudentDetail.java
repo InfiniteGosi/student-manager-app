@@ -2,7 +2,6 @@ package com.example.studentmanagement.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -16,17 +15,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.studentmanagement.R;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class StudentDetail extends AppCompatActivity {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private DatabaseReference db = FirebaseDatabase.getInstance().getReference("students");
     ImageView imageView_profile_dp;
     TextView textView_show_welcome, textView_show_id_student, textView_show_full_name,
             textView_show_national, textView_show_email, textView_show_dob,
@@ -37,6 +36,7 @@ public class StudentDetail extends AppCompatActivity {
     Button saveInfoStudent;
 
     RelativeLayout relativeLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +65,7 @@ public class StudentDetail extends AppCompatActivity {
         }
 
         String studentId = getIntent().getStringExtra("STUDENT_ID");
-        if(studentId != null){
+        if (studentId != null) {
             getStudentDetail(studentId, checkEditMode);
 
             saveInfoStudent.setOnClickListener(v -> {
@@ -77,60 +77,57 @@ public class StudentDetail extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         }
     }
-    private void getStudentDetail(String studentId, boolean isEditMode){
 
-        Log.d("StudentDetail", "Firestore instance retrieved.");
-        db.collection("students")
-                .document(studentId)
-                .get()
-                .addOnCompleteListener(task -> {
-                   if(task.isSuccessful()){
-                       DocumentSnapshot document = task.getResult();
-                       if(document != null && document.exists()){
-                           String fullName = document.getString("fullName");
-                           String dateOfBirth = document.getString("dateOfBirth");
-                           String nationality = document.getString("nationality");
-                           String phoneNumber = document.getString("phoneNumber");
-                           String email = document.getString("email");
-                           String currentClass = document.getString("currentClass");
-                           float gpa = document.getDouble("gpa").floatValue();
-                           String guardianName = document.getString("guardianName");
-                           String guardianPhone = document.getString("guardianPhone");
+    private void getStudentDetail(String studentId, boolean isEditMode) {
+        db.child(studentId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String fullName = snapshot.child("fullName").getValue(String.class);
+                    String dateOfBirth = snapshot.child("dateOfBirth").getValue(String.class);
+                    String nationality = snapshot.child("nationality").getValue(String.class);
+                    String phoneNumber = snapshot.child("phoneNumber").getValue(String.class);
+                    String email = snapshot.child("email").getValue(String.class);
+                    String currentClass = snapshot.child("currentClass").getValue(String.class);
+                    float gpa = snapshot.child("gpa").getValue(Float.class);
+                    String guardianName = snapshot.child("guardianName").getValue(String.class);
+                    String guardianPhone = snapshot.child("guardianPhone").getValue(String.class);
 
-                           textView_show_welcome.setText(fullName);
-                           textView_show_id_student.setText(studentId);
-                           textView_show_full_name.setText(fullName);
-                           textView_show_national.setText(nationality);
-                           textView_show_email.setText(email);
-                           textView_show_dob.setText(dateOfBirth);
-                           textView_show_current_class.setText(currentClass);
-                           textView_show_student_phone.setText(phoneNumber);
-                           textView_show_gpa.setText(String.valueOf(gpa));
-                           textView_show_parent_name.setText(guardianName);
-                           textView_show_parent_phone.setText(guardianPhone);
+                    textView_show_welcome.setText(fullName);
+                    textView_show_id_student.setText(studentId);
+                    textView_show_full_name.setText(fullName);
+                    textView_show_national.setText(nationality);
+                    textView_show_email.setText(email);
+                    textView_show_dob.setText(dateOfBirth);
+                    textView_show_current_class.setText(currentClass);
+                    textView_show_student_phone.setText(phoneNumber);
+                    textView_show_gpa.setText(String.valueOf(gpa));
+                    textView_show_parent_name.setText(guardianName);
+                    textView_show_parent_phone.setText(guardianPhone);
 
-                           // Gọi edtToTextView sau khi dữ liệu đã được gán vào các TextView
-                           if (isEditMode) {
-                               edtToTextView(textView_show_full_name, fullName);
-                               edtToTextView(textView_show_national, nationality);
-                               edtToTextView(textView_show_email, email);
-                               edtToTextView(textView_show_dob, dateOfBirth);
-                               edtToTextView(textView_show_current_class, currentClass);
-                               edtToTextView(textView_show_student_phone, phoneNumber);
-                               edtToTextView(textView_show_parent_name, guardianName);
-                               edtToTextView(textView_show_parent_phone, guardianPhone);
-                           }
-                       } else {
-                           Toast.makeText(this, "Sinh viên không tồn tại!",
-                                   Toast.LENGTH_SHORT).show();
-                       }
-                   } else {
-                       Toast.makeText(this, "Lỗi tải dữ liệu: " + task.getException().getMessage(),
-                               Toast.LENGTH_SHORT).show();
-                   }
-                });
+                    if (isEditMode) {
+                        edtToTextView(textView_show_full_name, fullName);
+                        edtToTextView(textView_show_national, nationality);
+                        edtToTextView(textView_show_email, email);
+                        edtToTextView(textView_show_dob, dateOfBirth);
+                        edtToTextView(textView_show_current_class, currentClass);
+                        edtToTextView(textView_show_student_phone, phoneNumber);
+                        edtToTextView(textView_show_parent_name, guardianName);
+                        edtToTextView(textView_show_parent_phone, guardianPhone);
+                    }
+                } else {
+                    Toast.makeText(StudentDetail.this, "Sinh viên không tồn tại!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(StudentDetail.this, "Lỗi tải dữ liệu: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
-    private void saveUpdateInfo(String studentId){
+
+    private void saveUpdateInfo(String studentId) {
         String fullName = editName.getText().toString();
         String nationality = editNational.getText().toString();
         String email = editEmail.getText().toString();
@@ -150,23 +147,15 @@ public class StudentDetail extends AppCompatActivity {
         studentUpdates.put("guardianName", guardianName);
         studentUpdates.put("guardianPhone", guardianPhone);
 
-        DocumentReference studentRef = db.collection("students").document(studentId);
-        studentRef.update(studentUpdates).addOnSuccessListener(aVoid -> {
-            Toast.makeText(this, "Cập nhật thông tin sinh viên thành công!",
-                    Toast.LENGTH_SHORT).show();
+        db.child(studentId).updateChildren(studentUpdates).addOnSuccessListener(aVoid -> {
+            Toast.makeText(StudentDetail.this, "Cập nhật thông tin sinh viên thành công!", Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(e -> {
-            if (e instanceof FirebaseFirestoreException &&
-                    ((FirebaseFirestoreException) e).getCode() == FirebaseFirestoreException.Code.UNAVAILABLE) {
-                Toast.makeText(this, "Không có kết nối Internet. Vui lòng kiểm tra lại!",
-                        Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Lỗi cập nhật thông tin: " + e.getMessage(),
-                        Toast.LENGTH_SHORT).show();
-            }
+            Toast.makeText(StudentDetail.this, "Lỗi cập nhật thông tin: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
         finish();
     }
-    private void edtToTextView(TextView info, String data){
+
+    private void edtToTextView(TextView info, String data) {
         EditText nameField = new EditText(this);
         nameField.setId(info.getId());
         nameField.setText(data);
@@ -202,9 +191,7 @@ public class StudentDetail extends AppCompatActivity {
                 editParentPhone = nameField;
             }
         } else {
-            Toast.makeText(this, "Lỗi khi tải dữ liệu",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Lỗi khi tải dữ liệu", Toast.LENGTH_SHORT).show();
         }
     }
 }
-

@@ -19,8 +19,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.studentmanagement.R;
 import com.example.studentmanagement.adapters.StudentAdapter;
 import com.example.studentmanagement.data.Student;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,7 +32,8 @@ public class StudentListFragment extends Fragment {
     private RecyclerView recyclerView;
     private StudentAdapter studentAdapter;
     private ArrayList<Student> studentList;
-    private FirebaseFirestore db;
+    private FirebaseDatabase database;
+    private DatabaseReference studentRef;
     private SearchView searchView;
     private ImageView imgSort;
     private boolean isAscending = true;
@@ -43,13 +47,16 @@ public class StudentListFragment extends Fragment {
         searchView = view.findViewById(R.id.searchView);
         recyclerView = view.findViewById(R.id.std_list_recyclerview);
 
-        db = FirebaseFirestore.getInstance();
+        // Khởi tạo Realtime Database
+        database = FirebaseDatabase.getInstance();
+        studentRef = database.getReference("students");
+
         studentList = new ArrayList<>();
         studentAdapter = new StudentAdapter(getContext(), this, studentList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(studentAdapter);
 
-        loadStudentsFromFirestore();
+        loadStudentsFromDatabase();
 
         setupSearchView();
         setupSortMenu();
@@ -103,34 +110,29 @@ public class StudentListFragment extends Fragment {
         });
     }
 
-    public void loadStudentsFromFirestore() {
-        db.collection("students").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+    public void loadStudentsFromDatabase() {
+        studentRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 studentList.clear();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    String fullName = document.getString("fullName");
-                    String dateOfBirth = document.getString("dateOfBirth");
-                    String nationality = document.getString("nationality");
-                    String phoneNumber = document.getString("phoneNumber");
-                    String email = document.getString("email");
-                    String studentID = document.getString("studentID");
-                    String currentClass = document.getString("currentClass");
-                    float gpa = document.getDouble("gpa").floatValue();
-                    String guardianName = document.getString("guardianName");
-                    String guardianPhone = document.getString("guardianPhone");
-
-                    Student student = new Student(fullName, dateOfBirth, nationality, phoneNumber, email, studentID, currentClass, gpa, guardianName, guardianPhone);
-                    studentList.add(student);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Student student = snapshot.getValue(Student.class);
+                    if (student != null) {
+                        studentList.add(student);
+                    }
                 }
-                studentAdapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(getContext(), "Error loading data: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                studentAdapter.notifyDataSetChanged(); // Cập nhật lại RecyclerView
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getContext(), "Error loading data: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public void refreshStudentList() {
-        loadStudentsFromFirestore();
+        loadStudentsFromDatabase();
     }
 
     private void filterStudentList(String query) {
