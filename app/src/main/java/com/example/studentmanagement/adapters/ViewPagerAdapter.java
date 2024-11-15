@@ -30,6 +30,8 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
                     return new HomeFragment();
                 case 1:
                     return new StudentListFragment();
+                case 2:
+                    return new ProfileFragment();
                 default:
                     return new ProfileFragment();
             }
@@ -40,6 +42,8 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
                 case 1:
                     return new StudentListFragment();
                 case 2:
+                    return new ProfileFragment();
+                case 3:
                     return new ProfileFragment();
                 default:
                     return new ProfileFragment();
@@ -54,6 +58,8 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
                     return new ProfileFragment();
                 case 3:
                     return new UserFragment();
+                case 4:
+                    return new ProfileFragment();
                 default:
                     return new ProfileFragment();
             }
