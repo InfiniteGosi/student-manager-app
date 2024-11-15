@@ -111,9 +111,9 @@ public class StudentListFragment extends Fragment {
     }
 
     public void loadStudentsFromDatabase() {
-        studentRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        studentRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 studentList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Student student = snapshot.getValue(Student.class);
@@ -121,11 +121,11 @@ public class StudentListFragment extends Fragment {
                         studentList.add(student);
                     }
                 }
-                studentAdapter.notifyDataSetChanged();
+                studentAdapter.notifyDataSetChanged(); // Cập nhật lại RecyclerView
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
                 Toast.makeText(getContext(), "Error loading data: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
