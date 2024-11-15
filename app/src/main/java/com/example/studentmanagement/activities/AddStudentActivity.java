@@ -187,7 +187,7 @@ public class AddStudentActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference studentRef = database.getReference("students");
 
-        String studentKey = studentRef.push().getKey();
+        String studentKey = studentID;
         if (studentKey != null) {
             Student newStudent = new Student(fullName, dateOfBirth, nationality, phoneNumber,
                     email, studentID, currentClass, gpa, guardianName, guardianPhone);

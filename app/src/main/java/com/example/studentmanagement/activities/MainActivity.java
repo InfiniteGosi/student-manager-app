@@ -156,7 +156,7 @@ public class MainActivity extends FragmentActivity {
                     } else if (position == 2) {
 
                     } else if (position == 3) {
-                        bottomNavigationView.setSelectedItemId(R.id.item_profile);
+                        bottomNavigationView.setSelectedItemId(R.id.item_staff);
                     } else if (position == 4) {
                         bottomNavigationView.setSelectedItemId(R.id.item_profile);
                     }
