@@ -1,6 +1,8 @@
 package com.example.studentmanagement.fragments;
 
+import android.inputmethodservice.Keyboard;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,9 +22,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.studentmanagement.R;
 import com.example.studentmanagement.adapters.StudentAdapter;
 import com.example.studentmanagement.data.Student;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -29,10 +37,13 @@ public class StudentListFragment extends Fragment {
     private RecyclerView recyclerView;
     private StudentAdapter studentAdapter;
     private ArrayList<Student> studentList;
-    private FirebaseFirestore db;
+    private FirebaseDatabase database;
+    private DatabaseReference studentRef;
     private SearchView searchView;
     private ImageView imgSort;
+    private ImageView imgDown;
     private boolean isAscending = true;
+
 
     @Nullable
     @Override
@@ -42,14 +53,21 @@ public class StudentListFragment extends Fragment {
         imgSort = view.findViewById(R.id.imgSort);
         searchView = view.findViewById(R.id.searchView);
         recyclerView = view.findViewById(R.id.std_list_recyclerview);
+        imgDown = view.findViewById(R.id.imgDown);
 
-        db = FirebaseFirestore.getInstance();
+
+        // Khởi tạo Realtime Database
+        database = FirebaseDatabase.getInstance();
+        studentRef = database.getReference("students");
+
         studentList = new ArrayList<>();
         studentAdapter = new StudentAdapter(getContext(), this, studentList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(studentAdapter);
 
-        loadStudentsFromFirestore();
+        loadStudentsFromDatabase();
+
+        imgDown.setOnClickListener(v -> downloadStudentList());
 
         setupSearchView();
         setupSortMenu();
@@ -103,34 +121,29 @@ public class StudentListFragment extends Fragment {
         });
     }
 
-    public void loadStudentsFromFirestore() {
-        db.collection("students").get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
+    public void loadStudentsFromDatabase() {
+        studentRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 studentList.clear();
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    String fullName = document.getString("fullName");
-                    String dateOfBirth = document.getString("dateOfBirth");
-                    String nationality = document.getString("nationality");
-                    String phoneNumber = document.getString("phoneNumber");
-                    String email = document.getString("email");
-                    String studentID = document.getString("studentID");
-                    String currentClass = document.getString("currentClass");
-                    float gpa = document.getDouble("gpa").floatValue();
-                    String guardianName = document.getString("guardianName");
-                    String guardianPhone = document.getString("guardianPhone");
-
-                    Student student = new Student(fullName, dateOfBirth, nationality, phoneNumber, email, studentID, currentClass, gpa, guardianName, guardianPhone);
-                    studentList.add(student);
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Student student = snapshot.getValue(Student.class);
+                    if (student != null) {
+                        studentList.add(student);
+                    }
                 }
-                studentAdapter.notifyDataSetChanged();
-            } else {
-                Toast.makeText(getContext(), "Error loading data: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                studentAdapter.notifyDataSetChanged(); // Cập nhật lại RecyclerView
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(getContext(), "Error loading data: " + databaseError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     public void refreshStudentList() {
-        loadStudentsFromFirestore();
+        loadStudentsFromDatabase();
     }
 
     private void filterStudentList(String query) {
@@ -195,4 +208,46 @@ public class StudentListFragment extends Fragment {
         studentAdapter.notifyDataSetChanged();
         isAscending = !isAscending; // Đổi trạng thái sắp xếp
     }
+
+    private void downloadStudentList() {
+        // Kiểm tra nếu danh sách rỗng
+        if (studentList.isEmpty()) {
+            Toast.makeText(getContext(), "No students to download", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Ghi danh sách vào file CSV
+        writeStudentsToCsv();
+    }
+
+    private void writeStudentsToCsv() {
+        // Đường dẫn lưu file vào thư mục Downloads
+        String fileName = "student_list.csv";
+        File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(downloadDir, fileName);
+
+        try (FileWriter writer = new FileWriter(file)) {
+            // Ghi dòng tiêu đề
+            writer.append("Student ID,Full Name,Date of Birth,Nationality,Phone Number,Email,Class,GPA,Guardian Name,Guardian Phone\n");
+
+            // Ghi dữ liệu sinh viên
+            for (Student student : studentList) {
+                writer.append(student.getStudentID()).append(",")
+                        .append(student.getFullName()).append(",")
+                        .append(student.getDateOfBirth()).append(",")
+                        .append(student.getNationality()).append(",")
+                        .append(student.getPhoneNumber()).append(",")
+                        .append(student.getEmail()).append(",")
+                        .append(student.getCurrentClass()).append(",")
+                        .append(String.valueOf(student.getGpa())).append(",")
+                        .append(student.getGuardianName()).append(",")
+                        .append(student.getGuardianPhone()).append("\n");
+            }
+
+            Toast.makeText(getContext(), "File saved to Downloads: " + file.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Error writing file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }

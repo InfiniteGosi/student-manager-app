@@ -18,16 +18,14 @@ import com.example.studentmanagement.data.Student;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
-import com.example.studentmanagement.fragments.StudentListFragment;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class AddStudentActivity extends AppCompatActivity {
 
@@ -151,29 +149,26 @@ public class AddStudentActivity extends AppCompatActivity {
         String guardianName = etGuardianName.getText().toString().trim();
         String guardianPhone = etGuardianPhone.getText().toString().trim();
 
-        // Kiểm tra thông tin đầu vào
+        // Validate inputs
         if (fullName.isEmpty() || dateOfBirth.isEmpty() || nationality.isEmpty() ||
                 phoneNumber.isEmpty() || studentID.isEmpty() || currentClass.isEmpty() ||
                 guardianName.isEmpty() || guardianPhone.isEmpty()) {
-            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Kiểm tra định dạng email
         if (!isValidEmail(email)) {
-            Toast.makeText(this, "Email không hợp lệ.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid email format.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Kiểm tra định dạng số điện thoại
         if (!isValidPhoneNumber(phoneNumber)) {
-            Toast.makeText(this, "Số điện thoại không hợp lệ.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid phone number.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Kiểm tra định dạng ngày sinh (định dạng: dd/MM/yyyy)
         if (!isValidDate(dateOfBirth)) {
-            Toast.makeText(this, "Ngày sinh không hợp lệ. Định dạng: dd/MM/yyyy", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid date format (dd/MM/yyyy).", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -181,26 +176,33 @@ public class AddStudentActivity extends AppCompatActivity {
         try {
             gpa = Float.parseFloat(etGPA.getText().toString().trim());
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Điểm GPA không hợp lệ.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid GPA.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Tạo đối tượng sinh viên mới
-        Student newStudent = new Student(fullName, dateOfBirth, nationality, phoneNumber,
-                email, studentID, currentClass, gpa, guardianName, guardianPhone);
+        // Check if studentID exists in Firebase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference studentRef = database.getReference("students");
 
-        // Truyền đối tượng sinh viên mới về StudentListActivity
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("newStudent", newStudent);
-        setResult(RESULT_OK, resultIntent);
+        studentRef.child(studentID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult().exists()) {
+                Toast.makeText(this, "Student ID already exists. Please use a different ID.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Save the new student
+                Student newStudent = new Student(fullName, dateOfBirth, nationality, phoneNumber,
+                        email, studentID, currentClass, gpa, guardianName, guardianPhone);
 
-        Toast.makeText(this, "Thêm sinh viên thành công", Toast.LENGTH_SHORT).show();
-
-        // Kết thúc AddStudentActivity và quay về
-        new Handler().postDelayed(() -> {
-            finish(); // Kết thúc Activity sau thời gian chờ
-        }, 2000);
+                studentRef.child(studentID).setValue(newStudent)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(this, "Student added successfully.", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(this::finish, 2000);
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(this, "Failed to add student.", Toast.LENGTH_SHORT).show());
+            }
+        });
     }
+
+
     // Phương thức kiểm tra định dạng email
     private boolean isValidEmail(String email) {
         String emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";

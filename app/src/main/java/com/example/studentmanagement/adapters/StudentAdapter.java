@@ -13,15 +13,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.studentmanagement.R;
-
-import com.example.studentmanagement.fragments.StudentListFragment;
 import com.example.studentmanagement.activities.StudentDetail;
 import com.example.studentmanagement.data.Student;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.example.studentmanagement.fragments.StudentListFragment;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ import java.util.ArrayList;
 public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHolder> {
 
     private ArrayList<Student> studentList;
-    private FirebaseFirestore db;
+    private DatabaseReference databaseReference;
     private WeakReference<Fragment> fragmentRef;
     private WeakReference<Context> context;
 
@@ -37,7 +39,7 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         this.context = new WeakReference<>(context); // Use WeakReference to avoid memory leaks
         this.fragmentRef = new WeakReference<>(fragment);
         this.studentList = studentList;
-        this.db = FirebaseFirestore.getInstance();
+        this.databaseReference = FirebaseDatabase.getInstance().getReference("students");
     }
 
     @NonNull
@@ -56,27 +58,24 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         holder.tvEmail.setText("Email: " + student.getEmail());
 
         // Thiết lập sự kiện nhấp vào hình ảnh xóa
-        holder.imgDelete.setOnClickListener(v -> {
-            // Gọi phương thức xóa sinh viên
-            deleteStudent(student.getStudentID(), holder.getAdapterPosition());
-        });
+        holder.imgDelete.setOnClickListener(v -> deleteStudent(student.getStudentID(), holder.getAdapterPosition()));
 
-        // Thêm sự kiện nhấp vào hình ảnh sửa nếu cần
+        // Thêm sự kiện nhấp vào hình ảnh sửa
         holder.imgPen.setOnClickListener(v -> {
-            // Xử lý sửa sinh viên nếu cần
             Context conText = context.get();
-            if(conText != null){
+            if (conText != null) {
                 Intent intent = new Intent(conText, StudentDetail.class);
                 intent.putExtra("STUDENT_ID", student.getStudentID());
                 intent.putExtra("isEditMode", true);
                 conText.startActivity(intent);
+                loadStudentsFromRealtimeDatabase();
             }
         });
 
         // Sự kiện click xem thông tin sinh viên
         holder.linearLayout.setOnClickListener(v -> {
             Context conText = context.get();
-            if(conText != null){
+            if (conText != null) {
                 Intent intent = new Intent(conText, StudentDetail.class);
                 intent.putExtra("STUDENT_ID", student.getStudentID());
                 intent.putExtra("isEditMode", false);
@@ -103,13 +102,14 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
                     .setTitle("Xác nhận")
                     .setMessage("Bạn có chắc chắn muốn xóa sinh viên này?")
                     .setPositiveButton("Có", (dialog, which) -> {
-                        db.collection("students")
-                                .document(studentID)
-                                .delete();
-                        showToast("Đã xóa sinh viên");
-                        if (fragment instanceof StudentListFragment) {
-                            ((StudentListFragment) fragment).refreshStudentList();
-                        }
+                        databaseReference.child(studentID).removeValue()
+                                .addOnSuccessListener(aVoid -> {
+                                    showToast("Đã xóa sinh viên");
+                                    if (fragment instanceof StudentListFragment) {
+                                        ((StudentListFragment) fragment).refreshStudentList();
+                                    }
+                                })
+                                .addOnFailureListener(e -> showToast("Lỗi khi xóa sinh viên"));
                     })
                     .setNegativeButton("Không", null)
                     .show();
@@ -130,10 +130,31 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         }
     }
 
+    // Phương thức để tải danh sách sinh viên từ Realtime Database
+    public void loadStudentsFromRealtimeDatabase() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                ArrayList<Student> students = new ArrayList<>();
+                for (DataSnapshot studentSnapshot : snapshot.getChildren()) {
+                    Student student = studentSnapshot.getValue(Student.class);
+                    if (student != null) {
+                        students.add(student);
+                    }
+                }
+                setStudentList(students); // Cập nhật danh sách vào Adapter
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                showToast("Lỗi khi tải danh sách sinh viên");
+            }
+        });
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvStudentID, tvFullName, tvClass, tvEmail;
         ImageView imgDelete, imgPen;
-
         LinearLayout linearLayout;
 
         public ViewHolder(@NonNull View itemView) {
