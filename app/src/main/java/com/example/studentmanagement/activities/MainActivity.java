@@ -193,7 +193,7 @@ public class MainActivity extends FragmentActivity {
                             addStudentLauncher.launch(intent);
                         } else {
                             // Chọn Nhân Viên -> Mở AddStaffActivity
-                            Intent intent = new Intent(this, AddStaffActivity.class);
+                            Intent intent = new Intent(this, AddUserActivity.class);
                             startActivity(intent);
                         }
                     });

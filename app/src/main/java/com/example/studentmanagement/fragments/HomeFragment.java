@@ -73,7 +73,7 @@ public class HomeFragment extends Fragment {
         avatarImage = view.findViewById(R.id.avatar_image);
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        usernameText.setText("Hi " + user.getEmail());
+        usernameText.setText("Chào " + user.getEmail());
 
         userRef = FirebaseDatabase.getInstance().getReference("users")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());

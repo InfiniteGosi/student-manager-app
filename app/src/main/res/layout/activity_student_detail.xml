@@ -49,11 +49,11 @@
                 android:id="@+id/ic_id_student"
                 android:background="@drawable/ic_profile"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_id_student"
                 android:layout_alignStart="@+id/ic_profile"
-                android:hint="ID Student"
+                android:hint="Mã số sinh viên"
                 android:layout_marginStart="50dp"
                 android:textSize="18sp"/>
             <View
@@ -72,11 +72,11 @@
                 android:background="@drawable/ic_profile"
                 android:layout_marginTop="20dp"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_full_name"
                 android:layout_alignStart="@+id/ic_profile"
-                android:hint="Full name"
+                android:hint="Họ tên"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_below="@id/divider_id"
@@ -97,11 +97,11 @@
                 android:background="@drawable/ic_national"
                 android:layout_marginTop="20dp"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_national"
                 android:layout_alignStart="@+id/ic_national"
-                android:hint="National"
+                android:hint="Quốc tịch"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_below="@id/divider_name"
@@ -122,7 +122,7 @@
                 android:layout_below="@id/divider_national"
                 android:layout_marginTop="20dp"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_email"
                 android:layout_alignStart="@+id/ic_email"
@@ -147,11 +147,11 @@
                 android:layout_below="@id/divider_email"
                 android:layout_marginTop="20dp"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_dob"
                 android:layout_alignStart="@+id/ic_birthday"
-                android:hint="Birth day"
+                android:hint="Ngày sinh"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_below="@id/divider_email"
@@ -172,11 +172,11 @@
                 android:layout_below="@id/divider_dob"
                 android:layout_marginTop="20dp"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_current_class"
                 android:layout_alignStart="@+id/ic_current_class"
-                android:hint="Class"
+                android:hint="Lớp"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_below="@id/divider_dob"
@@ -197,7 +197,7 @@
                 android:layout_below="@id/divider_current_class"
                 android:layout_marginTop="20dp"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_gpa"
                 android:layout_alignStart="@+id/ic_gpa"
@@ -222,11 +222,11 @@
                 android:layout_below="@id/divider_gpa"
                 android:layout_marginTop="20dp"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_student_phone"
                 android:layout_alignStart="@+id/ic_student_phone"
-                android:hint="Student's phone"
+                android:hint="Số điện thoại"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_below="@id/divider_gpa"
@@ -247,11 +247,11 @@
                 android:layout_below="@id/divider_student_phone"
                 android:layout_marginTop="20dp"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_parent_name"
                 android:layout_alignStart="@+id/ic_parent_name"
-                android:hint="Parent's name"
+                android:hint="Họ tên phụ huynh"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_below="@id/divider_student_phone"
@@ -272,11 +272,11 @@
                 android:layout_below="@id/divider_parent_name"
                 android:layout_marginTop="20dp"/>
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView_show_parent_phone"
                 android:layout_alignStart="@+id/ic_parent_phone"
-                android:hint="Parent's Phone"
+                android:hint="Số điện thoại phụ huynh"
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:layout_below="@id/divider_parent_name"
