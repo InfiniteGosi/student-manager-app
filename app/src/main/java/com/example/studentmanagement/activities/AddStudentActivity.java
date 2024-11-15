@@ -149,29 +149,26 @@ public class AddStudentActivity extends AppCompatActivity {
         String guardianName = etGuardianName.getText().toString().trim();
         String guardianPhone = etGuardianPhone.getText().toString().trim();
 
-        // Kiểm tra thông tin đầu vào
+        // Validate inputs
         if (fullName.isEmpty() || dateOfBirth.isEmpty() || nationality.isEmpty() ||
                 phoneNumber.isEmpty() || studentID.isEmpty() || currentClass.isEmpty() ||
                 guardianName.isEmpty() || guardianPhone.isEmpty()) {
-            Toast.makeText(this, "Vui lòng điền đầy đủ thông tin.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Kiểm tra định dạng email
         if (!isValidEmail(email)) {
-            Toast.makeText(this, "Email không hợp lệ.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid email format.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Kiểm tra định dạng số điện thoại
         if (!isValidPhoneNumber(phoneNumber)) {
-            Toast.makeText(this, "Số điện thoại không hợp lệ.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid phone number.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Kiểm tra định dạng ngày sinh (định dạng: dd/MM/yyyy)
         if (!isValidDate(dateOfBirth)) {
-            Toast.makeText(this, "Ngày sinh không hợp lệ. Định dạng: dd/MM/yyyy", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid date format (dd/MM/yyyy).", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -179,29 +176,32 @@ public class AddStudentActivity extends AppCompatActivity {
         try {
             gpa = Float.parseFloat(etGPA.getText().toString().trim());
         } catch (NumberFormatException e) {
-            Toast.makeText(this, "Điểm GPA không hợp lệ.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid GPA.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Lưu thông tin sinh viên vào Realtime Database
+        // Check if studentID exists in Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference studentRef = database.getReference("students");
 
-        String studentKey = studentID;
-        if (studentKey != null) {
-            Student newStudent = new Student(fullName, dateOfBirth, nationality, phoneNumber,
-                    email, studentID, currentClass, gpa, guardianName, guardianPhone);
+        studentRef.child(studentID).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult().exists()) {
+                Toast.makeText(this, "Student ID already exists. Please use a different ID.", Toast.LENGTH_SHORT).show();
+            } else {
+                // Save the new student
+                Student newStudent = new Student(fullName, dateOfBirth, nationality, phoneNumber,
+                        email, studentID, currentClass, gpa, guardianName, guardianPhone);
 
-            studentRef.child(studentKey).setValue(newStudent)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "Thêm sinh viên thành công", Toast.LENGTH_SHORT).show();
-
-                        // Kết thúc AddStudentActivity và quay về
-                        new Handler().postDelayed(this::finish, 2000);
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(this, "Lỗi khi thêm sinh viên", Toast.LENGTH_SHORT).show());
-        }
+                studentRef.child(studentID).setValue(newStudent)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(this, "Student added successfully.", Toast.LENGTH_SHORT).show();
+                            new Handler().postDelayed(this::finish, 2000);
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(this, "Failed to add student.", Toast.LENGTH_SHORT).show());
+            }
+        });
     }
+
 
     // Phương thức kiểm tra định dạng email
     private boolean isValidEmail(String email) {
