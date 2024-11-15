@@ -12,11 +12,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.studentmanagement.R;
+
+import com.example.studentmanagement.fragments.StudentListFragment;
 import com.example.studentmanagement.activities.StudentDetail;
-import com.example.studentmanagement.activities.StudentListActivity;
 import com.example.studentmanagement.data.Student;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -27,10 +30,12 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
 
     private ArrayList<Student> studentList;
     private FirebaseFirestore db;
+    private WeakReference<Fragment> fragmentRef;
     private WeakReference<Context> context;
 
-    public StudentAdapter(Context context, ArrayList<Student> studentList) {
+    public StudentAdapter(Context context, Fragment fragment, ArrayList<Student> studentList) {
         this.context = new WeakReference<>(context); // Use WeakReference to avoid memory leaks
+        this.fragmentRef = new WeakReference<>(fragment);
         this.studentList = studentList;
         this.db = FirebaseFirestore.getInstance();
     }
@@ -92,9 +97,9 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
             return;
         }
 
-        Context contextRef = context.get();
-        if (contextRef != null) {
-            new AlertDialog.Builder(contextRef)
+        Fragment fragment = fragmentRef.get();
+        if (fragment != null && fragment.getActivity() != null) {
+            new AlertDialog.Builder(fragment.getActivity())
                     .setTitle("Xác nhận")
                     .setMessage("Bạn có chắc chắn muốn xóa sinh viên này?")
                     .setPositiveButton("Có", (dialog, which) -> {
@@ -102,7 +107,9 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
                                 .document(studentID)
                                 .delete();
                         showToast("Đã xóa sinh viên");
-                        ((StudentListActivity) contextRef).refreshStudentList(); // Gọi lại danh sách sinh viên từ activity
+                        if (fragment instanceof StudentListFragment) {
+                            ((StudentListFragment) fragment).refreshStudentList();
+                        }
                     })
                     .setNegativeButton("Không", null)
                     .show();
@@ -117,9 +124,9 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
     }
 
     private void showToast(String message) {
-        Context contextRef = context.get();
-        if (contextRef != null) {
-            Toast.makeText(contextRef, message, Toast.LENGTH_SHORT).show();
+        Fragment fragment = fragmentRef.get();
+        if (fragment != null && fragment.getContext() != null) {
+            Toast.makeText(fragment.getContext(), message, Toast.LENGTH_SHORT).show();
         }
     }
 

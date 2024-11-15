@@ -7,6 +7,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.studentmanagement.fragments.ProfileFragment;
+import com.example.studentmanagement.fragments.StudentListFragment;
 import com.example.studentmanagement.fragments.UserFragment;
 
 public class ViewPagerAdapter extends FragmentStateAdapter {
@@ -23,7 +24,7 @@ public class ViewPagerAdapter extends FragmentStateAdapter {
             case 0:
                 return new ProfileFragment();
             case 1:
-                return new ProfileFragment();
+                return new StudentListFragment();
             case 2:
                 return new ProfileFragment();
             case 3:
