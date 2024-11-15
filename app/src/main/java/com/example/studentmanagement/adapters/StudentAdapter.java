@@ -20,7 +20,6 @@ import com.example.studentmanagement.R;
 
 import com.example.studentmanagement.fragments.StudentListFragment;
 import com.example.studentmanagement.activities.StudentDetail;
-import com.example.studentmanagement.activities.StudentListActivity;
 import com.example.studentmanagement.data.Student;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -32,8 +31,10 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
     private ArrayList<Student> studentList;
     private FirebaseFirestore db;
     private WeakReference<Fragment> fragmentRef;
+    private WeakReference<Context> context;
 
-    public StudentAdapter(Fragment fragment, ArrayList<Student> studentList) {
+    public StudentAdapter(Context context, Fragment fragment, ArrayList<Student> studentList) {
+        this.context = new WeakReference<>(context); // Use WeakReference to avoid memory leaks
         this.fragmentRef = new WeakReference<>(fragment);
         this.studentList = studentList;
         this.db = FirebaseFirestore.getInstance();

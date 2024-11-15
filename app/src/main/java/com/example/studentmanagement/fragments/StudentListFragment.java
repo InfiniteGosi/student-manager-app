@@ -45,7 +45,7 @@ public class StudentListFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         studentList = new ArrayList<>();
-        studentAdapter = new StudentAdapter(this, studentList);
+        studentAdapter = new StudentAdapter(getContext(), this, studentList);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setAdapter(studentAdapter);
 
