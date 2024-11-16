@@ -1,50 +1,34 @@
 package com.example.studentmanagement.activities;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatButton;
-
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+
 import com.example.studentmanagement.R;
 import com.example.studentmanagement.data.Certificate;
-import com.example.studentmanagement.data.Student;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.opencsv.CSVReader;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AddCertificate extends AppCompatActivity {
     private EditText etCertificateName, etIssuer, etIssueDate;
     TextView addFromFile;
     private AppCompatButton btnSave;
+    private DatabaseReference databaseReference;
     private static final int PICK_CSV_FILE = 1;
-
-    private final ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Uri uri = result.getData().getData();
-                    if (uri != null) {
-                        readFileAndUpload(uri, ",");
-                    }
-                } else {
-                    Toast.makeText(this, "Tải file thất bại", Toast.LENGTH_SHORT).show();
-                }
-            }
-    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,58 +86,45 @@ public class AddCertificate extends AppCompatActivity {
     }
 
     private void selectFile() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.setType("text/*"); // Cho phép tất cả các loại file văn bản
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"text/csv", "application/vnd.ms-excel", "text/*"});
-        activityResultLauncher.launch(intent);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("text/csv");
+        startActivityForResult(Intent.createChooser(intent, "Select CSV"), PICK_CSV_FILE);
     }
-    private void readFileAndUpload(Uri uri, String delimiter){
-        if(uri == null){
-            Toast.makeText(this, "URI không hợp lệ hoặc tệp không được chọn.",
-                    Toast.LENGTH_SHORT).show();
-            return;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_CSV_FILE && resultCode == RESULT_OK && data != null) {
+            Uri csvUri = data.getData();
+            importCSV(csvUri);
         }
-        List<Certificate> certificatesList = new ArrayList<>();
+    }
+    private void importCSV(Uri csvUri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(csvUri);
+            CSVReader reader = new CSVReader(new InputStreamReader(inputStream));
+            String[] line;
 
-        try (InputStream inputStream = getContentResolver().openInputStream(uri);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            while ((line = reader.readNext()) != null) {
+                Map<String, Object> certificateData = new HashMap<>();
+                certificateData.put("name", line[0]); // Cột 1: Tên chứng chỉ
+                certificateData.put("issueDate", line[1]); // Cột 2: Ngày cấp
+                certificateData.put("issuer", line[2]); // Cột 3: Cấp bởi
 
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] fields = line.split(delimiter);
-
-                if (fields.length == 10) {
-                    // Create a new student object
-                    Certificate certificate = new Certificate(
-                            fields[0].trim(),
-                            fields[1].trim(),
-                            fields[2].trim(),
-                            fields[3].trim()
-                    );
-
-                    // Add the student to the list
-                    certificatesList.add(certificate);
-                } else {
-                    Log.e("File Error", "Dữ liệu không đúng định dạng.");
-                }
+                String certificateId = FirebaseDatabase.getInstance().getReference("certificates").push().getKey();
+                databaseReference.child(certificateId).child("certificates").push().setValue(certificateData)
+                        .addOnSuccessListener(aVoid ->
+                                Toast.makeText(this, "Nhập chứng chỉ thành công", Toast.LENGTH_SHORT).show())
+                        .addOnFailureListener(e ->
+                                Toast.makeText(this, "Nhập dữ liệu thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show());
             }
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("certificatesList", new ArrayList<>(certificatesList));  // Sending the list as an extra
-            setResult(RESULT_OK, intent);
-
-            Toast.makeText(this, "Thêm sinh viên thành công", Toast.LENGTH_SHORT).show();
-
-            // Kết thúc AddStudentActivity và quay về
-            new Handler().postDelayed(() -> {
-                finish(); // Kết thúc Activity sau thời gian chờ
-            }, 2000);
-
-            Toast.makeText(this, "Thêm sinh viên từ file thành công!", Toast.LENGTH_SHORT).show();
-        } catch (Exception e){
-            Log.e("File Error", "Lỗi khi đọc file", e);
-            Toast.makeText(this, "Lỗi khi đọc file", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Lỗi đọc file CSV", Toast.LENGTH_SHORT).show();
         }
     }
+
     private boolean isValidDate(String date) {
         String datePattern = "\\d{2}/\\d{2}/\\d{4}"; // Định dạng dd/MM/yyyy
         return date.matches(datePattern);

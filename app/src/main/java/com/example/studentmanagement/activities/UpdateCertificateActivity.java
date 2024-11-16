@@ -42,7 +42,6 @@ public class UpdateCertificateActivity extends AppCompatActivity {
 
             btnSave.setOnClickListener(v -> {
                 saveUpdateInfo(certificateId);
-                Toast.makeText(this, "Cập nhật thông tin chứng chỉ thành công", Toast.LENGTH_SHORT).show();
             });
         } else {
             Toast.makeText(this, "ID Chứng chỉ không hợp lệ", Toast.LENGTH_SHORT).show();
@@ -85,7 +84,7 @@ public class UpdateCertificateActivity extends AppCompatActivity {
         certificateUpdates.put("issueDate", issueDate);
 
         db.child(certificateId).updateChildren(certificateUpdates).addOnSuccessListener(aVoid -> {
-            Toast.makeText(UpdateCertificateActivity.this, "Cập nhật thông tin sinh viên thành công!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(UpdateCertificateActivity.this, "Cập nhật thông tin chứng chỉ thành công!", Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(e -> {
             Toast.makeText(UpdateCertificateActivity.this, "Lỗi cập nhật thông tin: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
