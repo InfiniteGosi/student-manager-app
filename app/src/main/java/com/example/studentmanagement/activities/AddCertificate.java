@@ -108,9 +108,10 @@ public class AddCertificate extends AppCompatActivity {
 
             while ((line = reader.readNext()) != null) {
                 Map<String, Object> certificateData = new HashMap<>();
-                certificateData.put("name", line[0]); // Cột 1: Tên chứng chỉ
-                certificateData.put("issueDate", line[1]); // Cột 2: Ngày cấp
+                certificateData.put("id", line[0]); // Cột 1: Tên chứng chỉ
+                certificateData.put("name", line[1]); // Cột 2: Ngày cấp
                 certificateData.put("issuer", line[2]); // Cột 3: Cấp bởi
+                certificateData.put("issueDate", line[3]);
 
                 String certificateId = FirebaseDatabase.getInstance().getReference("certificates").push().getKey();
                 databaseReference.child(certificateId).child("certificates").push().setValue(certificateData)
