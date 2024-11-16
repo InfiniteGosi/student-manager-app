@@ -41,7 +41,15 @@
         android:layout_marginBottom="16dp"  />
 
     <Button
+        android:id="@+id/viewCertificate"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Quản lý chứng chỉ" />
+
+    <Button
         android:id="@+id/logout_button"
+        android:layout_marginTop="16dp"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:gravity="center"

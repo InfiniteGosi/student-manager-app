@@ -2,6 +2,7 @@ package com.example.studentmanagement.fragments;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -25,6 +27,7 @@ import com.example.studentmanagement.activities.ChangePasswordActivity;
 import com.example.studentmanagement.activities.LoginActivity;
 import com.example.studentmanagement.activities.MainActivity;
 import com.example.studentmanagement.activities.UploadProfileImageActivity;
+import com.example.studentmanagement.activities.ViewCertificatesActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -38,7 +41,7 @@ import java.util.Objects;
 public class ProfileFragment extends Fragment {
 
     private DatabaseReference userRef;
-    private Button logoutButton, changepwButton;
+    private Button logoutButton, changepwButton, viewCertificate;
     private TextView usernameText;
     private ImageView changeIcon, avatarImage;
     private ActivityResultLauncher<Intent> uploadImageLauncher;
@@ -66,12 +69,14 @@ public class ProfileFragment extends Fragment {
         );
     }
 
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
         logoutButton = view.findViewById(R.id.logout_button);
         changepwButton = view.findViewById(R.id.changepw_button);
+        viewCertificate = view.findViewById(R.id.viewCertificate);
         usernameText = view.findViewById(R.id.text_username);
         changeIcon = view.findViewById(R.id.change_icon);
         avatarImage = view.findViewById(R.id.avatar_image);
@@ -81,6 +86,11 @@ public class ProfileFragment extends Fragment {
 
         userRef = FirebaseDatabase.getInstance().getReference("users")
                 .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        viewCertificate.setOnClickListener(view1 -> {
+            Intent intent = new Intent(getContext(), ViewCertificatesActivity.class);
+            startActivity(intent);
+        });
 
         logoutButton.setOnClickListener(view1 -> {
             FirebaseAuth.getInstance().signOut();

@@ -19,7 +19,11 @@
     <item
         android:id="@+id/item_staff"
         android:title="Staffs"
-        android:icon="@drawable/tie"/>
+        android:icon="@drawable/tie">
+    </item>
+
+
+
     <item
         android:id="@+id/item_profile"
         android:title="Profile"
