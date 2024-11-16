@@ -15,7 +15,7 @@
             android:layout_marginTop="30dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ADD FROM FILE"
+            android:text="THÊM TỪ FILE"
             android:textStyle="bold"
             android:textSize="18sp"
             android:gravity="right"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:fontFamily="@font/gluten_semibold"
-            android:text="ADD STUDENT"
+            android:text="THÊM SINH VIÊN"
             android:textSize="32sp"
             android:gravity="center"
             android:textColor="@color/black"/>

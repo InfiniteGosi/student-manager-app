@@ -87,6 +87,21 @@ public class UpdateUserActivity extends AppCompatActivity {
             boolean updatedStatus = checkboxStatus.isChecked();
             String updatedAge = etAge.getText().toString();
 
+            if (!isValidPhoneNumber(updatedPhone)) {
+                Toast.makeText(this, "Định dạng số điện thoại không đúng", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!isValidEmail(updatedEmail)) {
+                Toast.makeText(this, "Định dạng email không đúng", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!isValidAges(Integer.parseInt(updatedAge))) {
+                Toast.makeText(this, "Tuổi không hợp lệ", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             // Create an updated User object
             User updatedUser = new User(updatedName, Integer.parseInt(updatedAge), updatedPhone, updatedEmail, updatedRole, updatedStatus);
 
@@ -109,10 +124,24 @@ public class UpdateUserActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    Toast.makeText(UpdateUserActivity.this, "Error updating user", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UpdateUserActivity.this, "Lỗi khi cập nhật người dùng", Toast.LENGTH_SHORT).show();
                 }
             });
         });
 
+    }
+
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        String phonePattern = "0\\d{9,10}"; // Bắt đầu bằng 0 và theo sau là 9 hoặc 10 chữ số
+        return phoneNumber.matches(phonePattern);
+    }
+
+    private boolean isValidEmail(String email) {
+        String emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
+        return email.matches(emailPattern);
+    }
+
+    private boolean isValidAges(int age) {
+        return (age >= 18 && age <= 50);
     }
 }

@@ -88,13 +88,13 @@ public class UploadProfileImageActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Chọn hình"), PICK_IMAGE_REQUEST);
     }
 
     private void uploadProfileImage() {
         if (imageUrl != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setTitle("Uploading...");
+            progressDialog.setTitle("Đang tải lên...");
             progressDialog.show();
 
             // Generate a reference for the new image
@@ -144,7 +144,7 @@ public class UploadProfileImageActivity extends AppCompatActivity {
                         progressDialog.setMessage("Uploaded " + (int) progress + "%");
                     });
         } else {
-            Toast.makeText(this, "No image selected", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Không có hình được chọn", Toast.LENGTH_SHORT).show();
         }
     }
 
