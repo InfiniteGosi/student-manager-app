@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
             android:fontFamily="@font/gluten_semibold"
-            android:text="UPDATE STUDENT"
+            android:text="CẬP NHẬT SINH VIÊN"
             android:textSize="32sp"
             android:gravity="center"
             android:textColor="@color/black"/>

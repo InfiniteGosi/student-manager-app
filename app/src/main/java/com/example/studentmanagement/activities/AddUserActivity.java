@@ -66,7 +66,22 @@ public class AddUserActivity extends AppCompatActivity {
 
             // Validate inputs
             if (TextUtils.isEmpty(name) || TextUtils.isEmpty(age) || TextUtils.isEmpty(phone) || TextUtils.isEmpty(email)) {
-                Toast.makeText(this, "Please fill in all fields", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Vui lòng điền hết thông tin", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!isValidPhoneNumber(phone)) {
+                Toast.makeText(this, "Định dạng số điện thoại không đúng", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!isValidEmail(email)) {
+                Toast.makeText(this, "Định dạng email không đúng", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (!isValidAges(Integer.parseInt(age))) {
+                Toast.makeText(this, "Tuổi không hợp lệ", Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -142,6 +157,18 @@ public class AddUserActivity extends AppCompatActivity {
     }
 
 
+    private boolean isValidPhoneNumber(String phoneNumber) {
+        String phonePattern = "0\\d{9,10}"; // Bắt đầu bằng 0 và theo sau là 9 hoặc 10 chữ số
+        return phoneNumber.matches(phonePattern);
+    }
 
+    private boolean isValidEmail(String email) {
+        String emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}";
+        return email.matches(emailPattern);
+    }
+
+    private boolean isValidAges(int age) {
+        return (age >= 18 && age <= 50);
+    }
 
 }
