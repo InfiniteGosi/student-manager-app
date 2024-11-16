@@ -11,7 +11,18 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/addFromFile"
             android:layout_marginTop="30dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ADD FROM FILE"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:gravity="right"
+            android:textColor="#03B3C5"/>
+
+        <TextView
+            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"

@@ -28,7 +28,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_weight="1"
-                    android:text="List system users"
+                    android:text="DANH SÁCH NGƯỜI DÙNG"
                     android:textSize="24sp"
                     android:textStyle="bold" />
                 <ImageView

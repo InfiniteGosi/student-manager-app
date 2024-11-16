@@ -45,6 +45,14 @@
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Logout" />
+        android:text="Đăng xuất" />
+
+    <Button
+        android:id="@+id/changepw_button"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:text="Đổi mật khẩu" />
 
 </LinearLayout>
