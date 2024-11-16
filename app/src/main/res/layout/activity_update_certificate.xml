@@ -1,0 +1,52 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="30dp"
+        android:fontFamily="@font/gluten_semibold"
+        android:text="UPDATE CERTIFICATE"
+        android:textSize="32sp"
+        android:gravity="center"
+        android:textColor="@color/black"/>
+
+    <EditText
+        android:id="@+id/etCertificateName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Tên chứng chỉ"
+        android:layout_marginBottom="6dp"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background" />
+    <EditText
+        android:id="@+id/etIssuer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nơi cấp chứng chỉ"
+        android:layout_marginBottom="6dp"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background" />
+    <EditText
+        android:id="@+id/etIssueDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ngày phát hành"
+        android:layout_marginBottom="6dp"
+        android:padding="12dp"
+        android:background="@drawable/edittext_background" />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Lưu thông tin"
+        android:layout_marginTop="16dp"
+        android:padding="12dp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/login_btn_background"
+        android:textStyle="bold"/>
+</LinearLayout>

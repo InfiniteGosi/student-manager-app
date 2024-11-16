@@ -147,7 +147,6 @@ public class MainActivity extends FragmentActivity {
                     } else if (position == 3) {
                         bottomNavigationView.setSelectedItemId(R.id.item_profile);
                     }
-
                 } else {
                     if (position == 0) {
                         bottomNavigationView.setSelectedItemId(R.id.item_home);
@@ -174,26 +173,32 @@ public class MainActivity extends FragmentActivity {
             if (dataSnapshot.exists()) {
                 String role = dataSnapshot.child("role").getValue(String.class);
                 if ("Manager".equals(role)) {
-                    String[] options = {"Sinh Viên"};
-                    builder.setItems(options, (dialog, which) -> {
-                        if (which == 0) {
-                            // Chọn Sinh Viên -> Mở AddStudentActivity
-                            Intent intent = new Intent(this, AddStudentActivity.class);
-                            addStudentLauncher.launch(intent);
-                        }
-                    });
-                    builder.show();
-                }
-                else{
-                    String[] options = {"Sinh Viên", "Nhân Viên"};
+                    String[] options = {"Sinh Viên", "Chứng Chỉ"};
                     builder.setItems(options, (dialog, which) -> {
                         if (which == 0) {
                             // Chọn Sinh Viên -> Mở AddStudentActivity
                             Intent intent = new Intent(this, AddStudentActivity.class);
                             addStudentLauncher.launch(intent);
                         } else {
+                            Intent intent = new Intent(this, AddCertificate.class);
+                            startActivity(intent);
+                        }
+                    });
+                    builder.show();
+                }
+                else{
+                    String[] options = {"Sinh Viên", "Nhân Viên", "Chứng chỉ"};
+                    builder.setItems(options, (dialog, which) -> {
+                        if (which == 0) {
+                            // Chọn Sinh Viên -> Mở AddStudentActivity
+                            Intent intent = new Intent(this, AddStudentActivity.class);
+                            addStudentLauncher.launch(intent);
+                        } else if (which == 1){
                             // Chọn Nhân Viên -> Mở AddStaffActivity
                             Intent intent = new Intent(this, AddUserActivity.class);
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(this, AddCertificate.class);
                             startActivity(intent);
                         }
                     });
