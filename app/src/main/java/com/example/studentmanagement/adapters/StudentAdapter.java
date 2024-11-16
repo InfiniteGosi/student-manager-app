@@ -19,6 +19,8 @@ import com.example.studentmanagement.R;
 import com.example.studentmanagement.activities.StudentDetail;
 import com.example.studentmanagement.data.Student;
 import com.example.studentmanagement.fragments.StudentListFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -56,6 +58,28 @@ public class StudentAdapter extends RecyclerView.Adapter<StudentAdapter.ViewHold
         holder.tvStudentID.setText("Mã học sinh: " + student.getStudentID());
         holder.tvClass.setText("Lớp: " + student.getCurrentClass());
         holder.tvEmail.setText("Email: " + student.getEmail());
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            // Truy vấn Firebase Realtime Database để lấy vai trò người dùng
+            DatabaseReference usersRef = FirebaseDatabase.getInstance().getReference("users").child(currentUser.getUid());
+            usersRef.child("role").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String role = snapshot.getValue(String.class);
+                    if ("Employee".equals(role)) {
+                        // Nếu vai trò là "employee", trả về true
+                        holder.imgDelete.setVisibility(View.GONE);
+                        holder.imgPen.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    // Xử lý lỗi nếu có
+                }
+            });
+        }
 
         // Thiết lập sự kiện nhấp vào hình ảnh xóa
         holder.imgDelete.setOnClickListener(v -> deleteStudent(student.getStudentID(), holder.getAdapterPosition()));
